@@ -13,9 +13,9 @@ Discord bot that generates uses OpenAI's API to generate explainations for Pytho
 
 Here's how to use the bot commands:
 
-- **ToBinary**: `!tobinary <text>` - Converts the provided text to binary.
-- **FromBinary**: `!frombinary <binary>` - Converts the provided binary code to text.
-- **PythonSyntax**: `!pythonsyntax <code>` - Checks Python code for syntax errors and provides suggestions.
+- **ToBinary**: `/tobinary <text>` - Converts the provided text to binary.
+- **FromBinary**: `/frombinary <binary>` - Converts the provided binary code to text.
+- **PythonSyntax**: `/pythonsyntax <code>` - Checks Python code for syntax errors and provides suggestions.
 
 ## Built With
 
