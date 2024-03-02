@@ -41,15 +41,9 @@ module.exports = {
                         await interaction.editReply(response);
                     }
                 }
-
-                // response += message.choices[0]?.delta?.content || '';
                 
             }
-            // console.log(completion.choices[0].message.content);
-            // const response = completion.data.choices[0].message.content;
             console.log(response);
-            
-            
             
         }
         catch (error) {
