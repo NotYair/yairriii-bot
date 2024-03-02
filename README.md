@@ -21,8 +21,4 @@ Here's how to use the bot commands:
 
 - [Discord.js](https://discord.js.org/) - A powerful JavaScript library for interacting with the Discord API.
 - [OpenAI API](https://openai.com/api/) - Used for generating responses and checking Python syntax.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/NotYair/yairriii-bot/LICENSE.md) file for details.
-
+---
