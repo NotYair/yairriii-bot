@@ -23,7 +23,7 @@ module.exports = {
         try {
             const completion = await openai.chat.completions.create({
                 // Or another model suited for your needs
-                model: 'gpt-4o',
+                model: 'gpt-3.5-turbo',
                 messages: [{ role:'user', content: `Explain the following Python concept and provide an example: ${query}` }],
                 stream: true,
             });
