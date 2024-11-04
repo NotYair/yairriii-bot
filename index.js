@@ -1,7 +1,6 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const http = require('node:http');
-const http = require('node:http');
 const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
 const express = require('express');
 const { token } = process.env;
