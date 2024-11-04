@@ -111,8 +111,8 @@ const sendDummyRequest = () => {
     req.end();
 };
 
-// Send a dummy request every 15 minutes (900000 milliseconds)
-setInterval(sendDummyRequest, 890000);
+// Send a dummy request every 5 minutes (300000 milliseconds)
+setInterval(sendDummyRequest, 300000);
 
 // Initial dummy request to wake up the server
 sendDummyRequest();
