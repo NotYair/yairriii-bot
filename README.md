@@ -18,5 +18,4 @@ Here's how to use the bot commands:
 ## Built With
 
 - [Discord.js](https://discord.js.org/) - A powerful JavaScript library for interacting with the Discord API.
-- [OpenAI API](https://openai.com/api/) - Used for generating responses and checking Python syntax.
 ---
