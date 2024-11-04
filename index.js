@@ -44,7 +44,24 @@ client.on(Events.InteractionCreate, async interaction => {
         return;
     }
 
-    // Send a dummy request to keep the bot awake
+    try {
+        await command.execute(interaction);
+    } catch (error) {
+        console.error(error);
+        if (interaction.replied || interaction.deferred) {
+            await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
+        } else {
+            await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+        }
+    }
+});
+
+Server.listen(3000, () => {
+    console.log('Server is running on http://localhost:3000');
+});
+
+// Function to send a dummy request to wake up the server
+const sendDummyRequest = () => {
     const options = {
         hostname: 'localhost',
         port: 3000,
@@ -68,46 +85,13 @@ client.on(Events.InteractionCreate, async interaction => {
     });
 
     req.end();
-
-    try {
-        await command.execute(interaction);
-    } catch (error) {
-        console.error(error);
-        if (interaction.replied || interaction.deferred) {
-            await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
-        } else {
-            await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
-        }
-    }
-});
-
-Server.listen(3000, () => {
-    console.log('Server is running on http://localhost:3000');
-});
-
-// Send a dummy request to wake up the server
-const wakeUpServer = () => {
-    const options = {
-        hostname: 'localhost',
-        port: 3000,
-        path: '/',
-        method: 'GET'
-    };
-
-    const req = http.request(options, res => {
-        if (res.statusCode === 200) {
-            console.log('Server is awake, starting the bot...');
-            client.login(token);
-        } else {
-            console.error(`Failed to wake up the server. Status code: ${res.statusCode}`);
-        }
-    });
-
-    req.on('error', e => {
-        console.error(`Problem with request: ${e.message}`);
-    });
-
-    req.end();
 };
 
-wakeUpServer();
+// Send a dummy request every 15 minutes (900000 milliseconds)
+setInterval(sendDummyRequest, 890000);
+
+// Initial dummy request to wake up the server
+sendDummyRequest();
+
+// Log in the bot
+client.login(token);
