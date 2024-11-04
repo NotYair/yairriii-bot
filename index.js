@@ -1,9 +1,9 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const http = require('node:http');
-const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
+const { Client, Collection, Events, GatewayIntentBits, REST, Routes } = require('discord.js');
 const express = require('express');
-const { token } = process.env;
+const { token, client_id, guild_id } = process.env;
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages] });
 const app = express();
@@ -27,8 +27,35 @@ for (const file of commandFiles) {
     }
 }
 
-client.once(Events.ClientReady, readyClient => {
+client.once(Events.ClientReady, async readyClient => {
     console.log(`Logged in as ${readyClient.user.tag}`);
+
+    // Deploy commands
+    const commands = [];
+    for (const file of commandFiles) {
+        const filePath = path.join(commandsPath, file);
+        const command = require(filePath);
+        if ('data' in command && 'execute' in command) {
+            commands.push(command.data.toJSON());
+        } else {
+            console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
+        }
+    }
+
+    const rest = new REST({ version: '10' }).setToken(token);
+
+    try {
+        console.log(`Started refreshing ${commands.length} application (/) commands.`);
+
+        const data = await rest.put(
+            Routes.applicationGuildCommands(client_id, guild_id),
+            { body: commands },
+        );
+
+        console.log(`Successfully reloaded ${data.length} application (/) commands.`);
+    } catch (error) {
+        console.error(error);
+    }
 });
 
 client.on(Events.InteractionCreate, async interaction => {
