@@ -1,15 +1,15 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
-const http = require('http');
+const express = require('express');
 const { token } = process.env;
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages] });
+const app = express();
 const port = 3000;
-const hostname = 'localhost';
-const Server = http.createServer((req, res) => {
-    res.writeHead(200, { 'Content-Type': 'text/plain' });
-    res.end('Hello World!');
+
+app.get('/', (req, res) => {
+    res.send('Hello World!');
 });
 
 client.commands = new Collection();
@@ -56,8 +56,8 @@ client.on(Events.InteractionCreate, async interaction => {
     }
 });
 
-Server.listen(3000, () => {
-    console.log('Server is running on http://localhost:3000');
+app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
 });
 
 // Function to send a dummy request to wake up the server
