@@ -1,9 +1,10 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
-const { token } = process.env;
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages] });
 const http = require('http');
+const { token } = process.env;
+
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages] });
 const port = 3000;
 const hostname = 'localhost';
 const Server = http.createServer((req, res) => {
@@ -23,8 +24,7 @@ for (const folder of commandFolders) {
         const command = require(filePath);
         if ('data' in command && 'execute' in command) {
             client.commands.set(command.data.name, command);
-        }
-        else {
+        } else {
             console.log(`Command ${file} does not have a data property.`);
         }
     }
@@ -71,13 +71,11 @@ client.on(Events.InteractionCreate, async interaction => {
 
     try {
         await command.execute(interaction);
-    }
-    catch (error) {
+    } catch (error) {
         console.error(error);
         if (interaction.replied || interaction.deferred) {
             await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
-        }
-        else {
+        } else {
             await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
         }
     }
@@ -87,4 +85,29 @@ Server.listen(3000, () => {
     console.log('Server is running on http://localhost:3000');
 });
 
-client.login(token);
+// Send a dummy request to wake up the server
+const wakeUpServer = () => {
+    const options = {
+        hostname: 'localhost',
+        port: 3000,
+        path: '/',
+        method: 'GET'
+    };
+
+    const req = http.request(options, res => {
+        if (res.statusCode === 200) {
+            console.log('Server is awake, starting the bot...');
+            client.login(token);
+        } else {
+            console.error(`Failed to wake up the server. Status code: ${res.statusCode}`);
+        }
+    });
+
+    req.on('error', e => {
+        console.error(`Problem with request: ${e.message}`);
+    });
+
+    req.end();
+};
+
+wakeUpServer();
