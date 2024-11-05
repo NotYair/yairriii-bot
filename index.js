@@ -1,6 +1,5 @@
 const fs = require('node:fs');
 const path = require('node:path');
-const http = require('node:http');
 const { Client, Collection, Events, GatewayIntentBits, REST, Routes } = require('discord.js');
 const express = require('express');
 const { token, client_id, guild_id } = process.env;
@@ -9,15 +8,8 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBit
 const app = express();
 const port = 3000;
 
-let isFirstRequest = true;
-
 app.get('/', (req, res) => {
-    if (isFirstRequest) {
-        res.send('The bot is booting up, please wait a minute and try again.');
-        isFirstRequest = false;
-    } else {
-        res.send('Hello World!');
-    }
+    res.send('Hello World!');
 });
 
 client.commands = new Collection();
@@ -90,39 +82,6 @@ client.on(Events.InteractionCreate, async interaction => {
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
-
-// Function to send a dummy request to wake up the server
-const sendDummyRequest = () => {
-    const options = {
-        hostname: 'localhost',
-        port: 3000,
-        path: '/',
-        method: 'GET'
-    };
-
-    const req = http.request(options, res => {
-        console.log(`STATUS: ${res.statusCode}`);
-        res.setEncoding('utf8');
-        res.on('data', chunk => {
-            console.log(`BODY: ${chunk}`);
-        });
-        res.on('end', () => {
-            console.log('No more data in response.');
-        });
-    });
-
-    req.on('error', e => {
-        console.error(`Problem with request: ${e.message}`);
-    });
-
-    req.end();
-};
-
-// Send a dummy request every 5 minutes (300000 milliseconds)
-setInterval(sendDummyRequest, 300000);
-
-// Initial dummy request to wake up the server
-sendDummyRequest();
 
 // Log in the bot
 client.login(token);
