@@ -9,8 +9,15 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBit
 const app = express();
 const port = 3000;
 
+let isFirstRequest = true;
+
 app.get('/', (req, res) => {
-    res.send('Hello World!');
+    if (isFirstRequest) {
+        res.send('The bot is booting up, please wait a minute and try again.');
+        isFirstRequest = false;
+    } else {
+        res.send('Hello World!');
+    }
 });
 
 client.commands = new Collection();
